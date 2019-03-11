@@ -3,9 +3,13 @@ import { Card } from 'antd'
 import { Table } from 'antd';
 import axios from 'axios'
 import './index.less'
+import utils from '../../../utils/utils';
 
 class Basic extends Component {
-    state = {}
+    state = {
+        selectedRowKeys: [],
+        setItem: []
+    };
     componentDidMount(){
         this.request()
         console.log(this.state.mockData)
@@ -13,13 +17,26 @@ class Basic extends Component {
     request = () => {
         let baseUrl = 'https://www.easy-mock.com/mock/5c84ba14cfb6692c29516334/mockapi'
         axios.get(baseUrl+'/table/list').then((res) => {
-            // this.setState({
-            //     mockData: res.data.result.list
-            // })
-            // console.log(res.data)
             if (res.data.code === 0 && res.status === 200){
                 this.setState({
-                    mockData: res.data.result.list
+                    mockData: res.data.result.list,
+                    pagination: utils.pagination(res.data,(page)=>{
+                        console.log(page);
+                        this.mockPagination(page)
+                    })
+                })
+            }
+        })
+    }
+    mockPagination = (page) => {
+        let baseUrl = 'https://www.easy-mock.com/mock/5c84ba14cfb6692c29516334/mockapi'
+        axios.post(baseUrl + `/table/list2?page=${page}`).then((res) => {
+            if (res.data.code === 0 && res.status === 200) {
+                this.setState({
+                    mockData: res.data.result.list,
+                    pagination: utils.pagination(res.data, (cur) => {
+                        this.mockPagination(cur)
+                    })
                 })
             }
         })
@@ -103,7 +120,33 @@ class Basic extends Component {
             "province": "福建省",
             "county": "渝中区"
         }];
+    onChange =(selectedRowKeys, selectedRows) => {
+        console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    }
+    onRowClick = (record, index) => {
+        console.log(record, index)
+        let selectKey = index
+        this.setState({
+            selectedRowKeys: selectKey,
+            setItem: record
+        })
+    }
     render() {
+        const { selectedRowKeys} = this.state;
+        const rowSelection = {
+            onChange: (selectedRowKeys, selectedRows) => {
+                console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            },
+            getCheckboxProps: record => ({
+                disabled: record.name === 'Disabled User', // Column configuration not to be checked
+                name: record.name,
+            }),
+            // type: 'checkbox',
+            // selectedRowKeys,
+            // onChange: (selectedRowKeys, selectedRows) => {
+            //     console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            // },
+        };
         return (
             <div>
                 <Card
@@ -115,6 +158,23 @@ class Basic extends Component {
                     title="高级表格"
                 >
                     <Table columns={this.columns} dataSource={this.state.mockData} />
+                </Card>
+                <Card
+                    title="选项表格"
+                >
+                    <Table
+                        onRow={(record,index) => {
+                            return {
+                                onClick: () => {this.onRowClick(record,index)}
+                            };
+                        }}
+                        rowSelection={rowSelection} columns={this.columns} dataSource={this.state.mockData} />
+                </Card>
+                <Card
+                    title="表格分页"
+                >
+                    <Table
+                        columns={this.columns} dataSource={this.state.mockData} pagination={this.state.pagination} />
                 </Card>
             </div>
         )
