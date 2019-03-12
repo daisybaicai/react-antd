@@ -8,6 +8,7 @@ import mButton from './pages/ui/button';
 import mModals from './pages/ui/modals';
 import noMatch from './pages/noMatch';
 import Basic from './pages/table/basic';
+import Map from './pages/map';
 class IRouter extends Component {
     render() {
         return (
@@ -21,6 +22,7 @@ class IRouter extends Component {
                                 <Route exact path="/ui/buttons" component={mButton} />
                                 <Route exact path="/ui/modals" component={mModals} />
                                 <Route exact path="/table/basic" component={Basic} />
+                                <Route exact path="/bikeMap" component={Map} />
                                 <Route exact component={noMatch} />
                             </Switch>
                         </Admin>
