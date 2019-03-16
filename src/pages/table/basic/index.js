@@ -132,7 +132,7 @@ class Basic extends Component {
         })
     }
     render() {
-        const { selectedRowKeys} = this.state;
+        // const { selectedRowKeys} = this.state;
         const rowSelection = {
             onChange: (selectedRowKeys, selectedRows) => {
                 console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);

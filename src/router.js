@@ -11,6 +11,7 @@ import Basic from './pages/table/basic';
 import Map from './pages/map';
 import Bar from './pages/charts/bar';
 import Rich from './pages/rich';
+import Permission from './pages/permission';
 class IRouter extends Component {
     render() {
         return (
@@ -27,6 +28,7 @@ class IRouter extends Component {
                                 <Route exact path="/bikeMap" component={Map} />
                                 <Route exact path="/charts/bar" component={Bar} />
                                 <Route exact path="/rich" component={Rich}/>
+                                <Route exact path="/permission" component={Permission}></Route>
                                 <Route exact component={noMatch} />
                             </Switch>
                         </Admin>
